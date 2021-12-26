@@ -341,7 +341,7 @@ get_data().then((card_attrs_new) => {
         <div style=""><p>${分项能力}</p></div>
         </div>
         
-        <div style="display:grid;grid-template:auto / 120px 1fr;">
+        <div style="display:grid;grid-template:auto / 80px 1fr;">
         <div style='color:#02a2ff;font-weight:bold;'><p>评价: </p></div>
         <div style="white-space:pre-wrap;">${comments.get(id) ? comments.get(id).map((s) => s.length ? `<p>　　${s}</p>` : "<br>").join("") : ("寄").repeat(384)}</div>
         </div>
