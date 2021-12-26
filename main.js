@@ -346,7 +346,7 @@ get_data().then((card_attrs_new) => {
         <div style="white-space:pre-wrap;">${comments.get(id) ? comments.get(id).map((s) => s.length ? `<p>　　${s}</p>` : "<br>").join("") : ("寄").repeat(384)}</div>
         </div>
 
-        <p style="text-align:right;opacity:70%;color:#ef5fa8;">
+        <p style="text-align:right;opacity:70%;color:#ef5fa8;padding-right:12px;">
             数据支持: SIFAS综合数据.xlsx (by 潜水/CoffeePot)
             <br>评价提供者: ${comments.get(0).map((s) => s.replace(/(\s|\n)/, "")).filter((s) => s.length).join("、")}
             <br>${Intl.DateTimeFormat({}, { year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())}
@@ -391,8 +391,8 @@ get_data().then((card_attrs_new) => {
             });
             //蓝色标题02a2ff 红色评分ee230d
             document.querySelector("body").innerHTML += tx
-                + '<div style="position:absolute;top:20%;left:-5%;font-size:135px;transform:rotate(37deg);font-weight:bold;color:blue;opacity:2.5%;white-space:pre;z-index:0;overflow:hidden;">LoveLive! AS Wiki</div>'
-                + '<div style="position:absolute;top:70%;left:-5%;font-size:135px;transform:rotate(37deg);font-weight:bold;color:blue;opacity:2.5%;white-space:pre;z-index:0;overflow:hidden;">LoveLive! AS Wiki</div>';
+                + '<div style="position:absolute;top:20%;left:-2%;font-size:128px;transform:rotate(37deg);font-weight:bold;color:blue;opacity:2.5%;white-space:pre;z-index:0;overflow:hidden;">LoveLive! AS Wiki</div>'
+                + '<div style="position:absolute;top:70%;left:-2%;font-size:128px;transform:rotate(37deg);font-weight:bold;color:blue;opacity:2.5%;white-space:pre;z-index:0;overflow:hidden;">LoveLive! AS Wiki</div>';
             return url_list;
         }, id, text);
 
