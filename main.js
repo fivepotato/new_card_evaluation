@@ -1,6 +1,5 @@
 "use strict";
 const puppeteer = require("puppeteer");
-const { pageExtend } = require("puppeteer-jquery");
 const excel_api = require("./excel_api");
 const fs = require("fs");
 const CHROME_PATH = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
@@ -182,13 +181,13 @@ class rating_constants {
             分项能力: null,
         }
         for (const { border, rating, description } of rating_constants.rating_borders["前排输出"]) {
-            if (a["前排输出"] / rating_constants.absv >= border) {
+            if (前排输出 / rating_constants.absv >= border) {
                 ratings.push({ type: "前排输出", rate: rating });
                 break;
             }
         }
         for (const { border, rating, description } of rating_constants.rating_borders["前排真输出"]) {
-            if (a["前排真输出"] / rating_constants.absvr >= border) {
+            if (前排真输出 / rating_constants.absvr >= border) {
                 ratings.push({ type: "前排真输出", rate: rating });
                 break;
             }
@@ -361,7 +360,7 @@ get_data().then((card_attrs_new) => {
 
     const browser = await puppeteer.launch({ /*executablePath: CHROME_PATH,*/ headless: false });
     for (const { id, text } of texts.values()) {
-        const page = pageExtend(await browser.newPage());
+        const page = await browser.newPage();
         await page.setViewport({ width: 960, height: 1280, deviceScaleFactor: 2, });
 
         //阻止所有图片加载
