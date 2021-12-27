@@ -88,6 +88,33 @@ const card_attrs_1 = (() => {
                 backline.push(v4);
             return backline.reduce((prev, curr) => prev + curr, 0);
         })(),
+        好友支援同属性: (() => {
+
+            const support = [];
+            const v0 = sheet[structure["槽强度"]["输出"] + line].v;
+            const v1 = sheet[structure["被动个性1强度"]["前排输出"] + line] && sheet[structure["被动个性1强度"]["前排输出"] + line].v || 0;
+            const v2 = sheet[structure["被动个性2强度"]["前排输出"] + line] && sheet[structure["被动个性2强度"]["前排输出"] + line].v || 0;
+            const v3 = sheet[structure["主动个性1强度"]["前排输出"] + line] && sheet[structure["主动个性1强度"]["前排输出"] + line].v || 0;
+            const v4 = sheet[structure["主动个性2强度"]["前排输出"] + line] && sheet[structure["主动个性2强度"]["前排输出"] + line].v || 0;
+            support.push(v0);
+            if (v1 && sheet[structure["被动个性1强度"]["范围"] + line].v === "同属性")
+                support.push(v1 * 1.5);
+            else
+                support.push(v1);
+            if (v2 && sheet[structure["被动个性2强度"]["范围"] + line].v === "同属性")
+                support.push(v2 * 1.5);
+            else
+                support.push(v2);
+            if (v3 && sheet[structure["主动个性1强度"]["对象"] + line] && sheet[structure["主动个性1强度"]["对象"] + line].v === "同属性")
+                support.push(v3 * 1.5);
+            else
+                support.push(v3);
+            if (v4 && sheet[structure["主动个性2强度"]["对象"] + line] && sheet[structure["主动个性2强度"]["对象"] + line].v === "同属性")
+                support.push(v4 * 1.5);
+            else
+                support.push(v4);
+            return support.reduce((prev, curr) => prev + curr, 0);
+        })(),
         特殊评分: (() => {
             const array = [];
             if (sheet[`${structure["卡片基本属性"]["type"]}${line}`].v === "sk") {
