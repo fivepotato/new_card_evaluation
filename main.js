@@ -301,7 +301,7 @@ class rating_constants {
             return null;
         }).filter((v) => v).join("<br>");
 
-        if (process.argv[2] === "en") {
+        if (process.argv.indexOf("en") !== -1) {
             results.评分 = results.评分
                 .replace(/([0-9](.[0-9])?)分/g, "$1")
                 .replace(/，神/g, "，Legendary")
@@ -411,7 +411,15 @@ get_data().then((card_attrs_new) => {
             if (req.resourceType() === "image") req.abort();
             else req.continue();
         })
-        await page.goto(`https://wiki.loveliv.es/${memid_to_fullname[parseInt(id.toString().slice(2, 5))]}`, { timeout: 114514, waitUntil: "domcontentloaded" });
+        if (process.argv.indexOf("purge") !== -1) {
+            await page.goto(`https://wiki.loveliv.es/${memid_to_fullname[parseInt(id.toString().slice(2, 5))]}?action=purge`, { timeout: 114514, waitUntil: "domcontentloaded" });
+            await Promise.all([
+                page.click("button"),
+                page.waitForNavigation({ waitUntil: "domcontentloaded" }),
+            ])
+        } else {
+            await page.goto(`https://wiki.loveliv.es/${memid_to_fullname[parseInt(id.toString().slice(2, 5))]}`, { timeout: 114514, waitUntil: "domcontentloaded" });
+        }
 
         //恢复所有图片加载
         page.removeAllListeners("request");
