@@ -79,8 +79,8 @@ class rating_constants {
             { border: 0.00, rating: 0, description: "F" },
         ],
         前排真输出: [
-            { border: 1.23, rating: 9.5, description: "SS+" },
-            { border: 1.21, rating: 9, description: "SS-" },
+            { border: 1.24, rating: 9.5, description: "SS+" },
+            { border: 1.215, rating: 9, description: "SS-" },
             { border: 1.19, rating: 9, description: "S+" },
             { border: 1.17, rating: 8.5, description: "S-" },
             { border: 1.15, rating: 8, description: "A+" },
