@@ -12,8 +12,8 @@ async function get_data() {
     card_attrs.sort((a, b) => a.no - b.no);
     const card_attrs_new = (() => {
         const event_no_new = card_attrs[card_attrs.length - 1].event_no;
-        return card_attrs.filter(({ event_no }) => event_no - event_no_new >= -1);
-    })().map(({ no, id, 前排输出, 前排真输出, 后排输出, 好友支援, 前排耐久, 后排耐久, 后排输出同属性, 特殊评分 }) => {
+        return card_attrs.filter(({ event_no }) => event_no - event_no_new >= 0);
+    })().map(({ no, id, 前排输出, 前排真输出, 后排输出, 好友支援, 前排耐久, 后排耐久, 后排输出同属性, 好友支援同属性, 特殊评分 }) => {
         const 前排输出排名 = card_attrs.sort((a, b) => b.前排输出 - a.前排输出).map(({ id }) => id).indexOf(id) + 1;
         const 前排真输出排名 = card_attrs.sort((a, b) => b.前排真输出 - a.前排真输出).map(({ id }) => id).indexOf(id) + 1;
         const 后排输出排名 = card_attrs.sort((a, b) => b.后排输出 - a.后排输出).map(({ id }) => id).indexOf(id) + 1;
@@ -21,6 +21,7 @@ async function get_data() {
         const 前排耐久排名 = card_attrs.sort((a, b) => b.前排耐久 - a.前排耐久).map(({ id }) => id).indexOf(id) + 1;
         const 后排耐久排名 = card_attrs.sort((a, b) => b.后排耐久 - a.后排耐久).map(({ id }) => id).indexOf(id) + 1;
         const 后排输出同属性排名 = card_attrs.sort((a, b) => b.后排输出同属性 - a.后排输出同属性).map(({ id }) => id).indexOf(id) + 1;
+        const 好友支援同属性排名 = card_attrs.sort((a, b) => b.好友支援同属性 - a.好友支援同属性).map(({ id }) => id).indexOf(id) + 1;
 
         if (card_attrs_21.map(({ id }) => id).indexOf(id) !== -1) {
             const 单前排奶盾能力 = card_attrs_21[card_attrs_21.map(({ id }) => id).indexOf(id)].单前排平均;
@@ -40,7 +41,7 @@ async function get_data() {
                 .indexOf(id) + 1;
             return {
                 no, id, 前排输出, 前排输出排名, 前排真输出, 前排真输出排名, 后排输出, 后排输出排名, 好友支援, 好友支援排名, 前排耐久, 前排耐久排名, 后排耐久, 后排耐久排名,
-                后排输出同属性, 后排输出同属性排名,
+                后排输出同属性, 后排输出同属性排名, 好友支援同属性, 好友支援同属性排名,
                 单前排奶盾能力, 单前排奶盾能力排名, 双前排奶盾能力, 双前排奶盾能力排名,
                 奶盾中前排输出排名, 奶盾中后排输出排名,
                 特殊评分,
@@ -49,7 +50,7 @@ async function get_data() {
 
         return {
             no, id, 前排输出, 前排输出排名, 前排真输出, 前排真输出排名, 后排输出, 后排输出排名, 好友支援, 好友支援排名, 前排耐久, 前排耐久排名, 后排耐久, 后排耐久排名,
-            后排输出同属性, 后排输出同属性排名,
+            后排输出同属性, 后排输出同属性排名, 好友支援同属性, 好友支援同属性排名,
             特殊评分,
         }
 
@@ -148,6 +149,11 @@ class rating_constants {
             { border: 0.18, description: "A+" },
             { border: 0.16, description: "A-" },
         ],
+        好友支援同属性: [
+            { border: 0.20, description: "S" },
+            { border: 0.18, description: "A+" },
+            { border: 0.16, description: "A-" },
+        ],
     }
     static rating_descriptions = new Map([
         [10, "神"],
@@ -169,7 +175,7 @@ class rating_constants {
     static rating(a) {
         const {
             no, id, 前排输出, 前排输出排名, 前排真输出, 前排真输出排名, 后排输出, 后排输出排名, 好友支援, 好友支援排名, 前排耐久, 前排耐久排名, 后排耐久, 后排耐久排名,
-            后排输出同属性, 后排输出同属性排名,
+            后排输出同属性, 后排输出同属性排名, 好友支援同属性, 好友支援同属性排名,
             单前排奶盾能力, 单前排奶盾能力排名, 双前排奶盾能力, 双前排奶盾能力排名,
             奶盾中前排输出排名, 奶盾中后排输出排名,
             特殊评分,
@@ -242,7 +248,7 @@ class rating_constants {
             if (local_ratings[0]) ratings.push(local_ratings.sort((a, b) => b.rate - a.rate)[0]);
         }
         特殊评分
-            .filter(({ type }) => ["前排输出", "前排真输出", "前排耐久", "单前排奶盾能力", "双前排奶盾能力", "后排输出", "后排输出同属性", "后排耐久", "好友支援"].indexOf(type) === -1)
+            .filter(({ type }) => ["前排输出", "前排真输出", "前排耐久", "单前排奶盾能力", "双前排奶盾能力", "后排输出", "后排输出同属性", "后排耐久", "好友支援", "好友支援同属性"].indexOf(type) === -1)
             .forEach((sp) => ratings.push(sp));
         //总评分和参与合成的最低评分
         //评分合成只能从高到低，不能从低到高
@@ -255,15 +261,16 @@ class rating_constants {
             }
             return prev;
         }, [-114514, -1919810]);
-        results.评分 = `<p><span style="font-weight:bold;${final_rating >= 9 ? "color:#ee230d;" : ""}">${final_rating}</span>，${rating_constants.rating_descriptions.get(final_rating)}</p>`;
+        results.评分 = `<p><span style="font-weight:bold;${final_rating >= 9 ? "color:#ee230d;" : ""}">${final_rating.toFixed(1)}</span>，${rating_constants.rating_descriptions.get(final_rating)}</p>`;
 
-        results.分项能力 = ["前排输出", "前排真输出", "前排耐久", "单前排奶盾能力", "双前排奶盾能力", "后排输出", "后排输出同属性", "后排耐久", "好友支援", "特殊评分"].map((type) => {
+        results.分项能力 = ["前排输出", "前排真输出", "前排耐久", "单前排奶盾能力", "双前排奶盾能力", "后排输出", "后排输出同属性", "后排耐久", "好友支援", "好友支援同属性", "特殊评分"].map((type) => {
             if (type === "后排输出同属性" && 后排输出 === 后排输出同属性) return null;
-            if (["前排输出", "后排输出", "后排输出同属性", "好友支援"].indexOf(type) !== -1) {
+            if (type === "好友支援同属性" && 好友支援 === 好友支援同属性) return null;
+            if (["前排输出", "后排输出", "后排输出同属性", "好友支援", "好友支援同属性"].indexOf(type) !== -1) {
                 for (const { border, rating, description } of rating_constants.rating_borders[type]) {
                     if (a[type] >= border * rating_constants.absv) {
                         return `${type}　<span style="font-weight:bold;${rating >= 9 ? "color:#ee230d;" : ""}">${description || "特殊"}</span>`
-                            + (rating ? `(<span${rating >= lower_rating ? ' style="color:#ff654e;"' : ''}>${rating}分</span>)` : "")
+                            + (rating ? `(<span${rating >= lower_rating ? ' style="color:#ff654e;"' : ''}>${rating.toFixed(1)}分</span>)` : "")
                             + `，<span style="font-weight:bold;">${parseInt(a[type] / rating_constants.absv * 1000).toString().replace(/([0-9]*)([0-9])/, "$1.$2")}</span>(${parseInt(a[type])}, ${a[type + "排名"]}位${a[`奶盾中${type}排名`] ? `, 奶盾中${a[`奶盾中${type}排名`]}位` : ""})`;
                     }
                 }
@@ -272,7 +279,7 @@ class rating_constants {
                 for (const { border, rating, description } of rating_constants.rating_borders[type]) {
                     if (a[type] >= border) {
                         return `${type}　<span style="font-weight:bold;${rating >= 9 ? "color:#ee230d;" : ""}">${description || "特殊"}</span>`
-                            + (rating ? `(<span${rating >= lower_rating ? ' style="color:#ff654e;"' : ''}>${rating}分</span>)` : "")
+                            + (rating ? `(<span${rating >= lower_rating ? ' style="color:#ff654e;"' : ''}>${rating.toFixed(1)}分</span>)` : "")
                             + `，<span style="font-weight:bold;">${a[type] > 1000 ? parseInt(a[type]) : parseInt(a[type] * 10).toString().replace(/([0-9]*)([0-9])/, "$1.$2")}</span>(${a[type + "排名"]}位)`;
                     }
                 }
@@ -280,7 +287,7 @@ class rating_constants {
             else if (type === "前排真输出") {
                 for (const { border, rating, description } of rating_constants.rating_borders[type]) {
                     if (a[type] >= border * rating_constants.absvr) {
-                        return `${type}　<span style="font-weight:bold;${rating >= 9 ? "color:#ee230d;" : ""}">${description}</span>(<span${rating >= lower_rating ? ' style="color:#ff654e;"' : ''}>${rating}分</span>)`
+                        return `${type}　<span style="font-weight:bold;${rating >= 9 ? "color:#ee230d;" : ""}">${description}</span>(<span${rating >= lower_rating ? ' style="color:#ff654e;"' : ''}>${rating.toFixed(1)}分</span>)`
                             + `，<span style="font-weight:bold;">${parseInt(a[type] / rating_constants.absvr * 1000).toString().replace(/([0-9]*)([0-9])/, "$1.$2")}</span>(${parseInt(a[type])}, ${a[type + "排名"]}位)`;
                     }
                 }
@@ -288,11 +295,46 @@ class rating_constants {
             else if (type === "特殊评分") {
                 return 特殊评分
                     .filter(({ type }) => ["前排输出", "前排真输出", "前排耐久", "单前排奶盾能力", "双前排奶盾能力", "后排输出", "后排输出同属性", "后排耐久", "好友支援"].indexOf(type) === -1)
-                    .map(({ type, rate }) => `${type}　<span style="font-weight:bold;${rate >= 9 ? "color:#ee230d;" : ""}">特殊</span>(<span${rate >= lower_rating ? ' style="color:#ff654e;"' : ''}>${rate}分</span>)`)
+                    .map(({ type, rate }) => `${type}　<span style="font-weight:bold;${rate >= 9 ? "color:#ee230d;" : ""}">特殊</span>(<span${rate >= lower_rating ? ' style="color:#ff654e;"' : ''}>${rate.toFixed(1)}分</span>)`)
                     .join("<br>");
             }
             return null;
         }).filter((v) => v).join("<br>");
+
+        if (process.argv[2] === "en") {
+            results.评分 = results.评分
+                .replace(/([0-9](.[0-9])?)分/g, "$1")
+                .replace(/，神/g, "，Legendary")
+                .replace(/，准神/g, "，Godlike")
+                .replace(/，超强/g, "，Powerful +")
+                .replace(/，强力/g, "，Powerful")
+                .replace(/，较强/g, "，Powerful -")
+                .replace(/，可用/g, "，Available")
+                .replace(/，较弱/g, "，Soso")
+                .replace(/，弱/g, "，Weak");
+
+            results.分项能力 = results.分项能力
+                .replace(/前排输出/g, "Frontline Voltage")
+                .replace(/前排真输出/g, "60000-Cap Voltage")
+                .replace(/前排耐久/g, "Frontline Recovery/Shield")
+                .replace(/单前排奶盾能力/g, "Healer General (Single Strategy)")
+                .replace(/双前排奶盾能力/g, "Healer General (Double Strategy)")
+                .replace(/后排输出同属性/g, "Backline Voltage (Same Attribute)")
+                .replace(/后排输出/g, "Backline Voltage")
+                .replace(/后排耐久/g, "Backline Recovery/Shield")
+                .replace(/好友支援同属性/g, "Friend Support")
+                .replace(/好友支援/g, "Friend Support")
+                .replace(/sk充电/g, "Skill Typed SPG")
+                .replace(/sk奶/g, "Skill Typed Healer")
+                .replace(/特技后排/g, "Backline Active Skill")
+                .replace(/SP后排/g, "Backline SP Gauge")
+                .replace(/([0-9](.[0-9])?)分/g, "$1")
+                .replace(/特殊/g, "Special")
+                .replace(/(?<=([0456789])|(1[123]))位/g, "th")
+                .replace(/(?<=1)位/g, "st")
+                .replace(/(?<=2)位/g, "nd")
+                .replace(/(?<=3)位/g, "rd")
+        }
 
         return results;
     }
@@ -345,7 +387,7 @@ get_data().then((card_attrs_new) => {
         <div style="white-space:pre-wrap;">${comments.get(id) ? comments.get(id).map((s) => s.length ? `<p>　　${s}</p>` : "<br>").join("") : ("寄").repeat(384)}</div>
         </div>
 
-        <p style="text-align:right;opacity:70%;color:#ef5fa8;padding-right:12px;">
+        <p style="text-align:right;opacity:70%;color:#ef5fa8;padding-right:12px;font-size:70%;">
             数据支持: SIFAS综合数据.xlsx (by 潜水/CoffeePot)
             <br>评价提供者: ${comments.get(0).map((s) => s.replace(/(\s|\n)/, "")).filter((s) => s.length).join("、")}
             <br>${Intl.DateTimeFormat({}, { year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())}
