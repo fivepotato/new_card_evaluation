@@ -12,7 +12,7 @@ async function get_data() {
     card_attrs.sort((a, b) => a.no - b.no);
     const card_attrs_new = (() => {
         const event_no_new = card_attrs[card_attrs.length - 1].event_no;
-        return card_attrs.filter(({ event_no }) => event_no - event_no_new >= 0);
+        return card_attrs.filter(({ id, event_no }) => event_no - event_no_new >= 0/*id === 300033002*/);
     })().map(({ no, id, 前排输出, 前排真输出, 后排输出, 好友支援, 前排耐久, 后排耐久, 后排输出同属性, 好友支援同属性, 特殊评分 }) => {
         const 前排输出排名 = card_attrs.sort((a, b) => b.前排输出 - a.前排输出).map(({ id }) => id).indexOf(id) + 1;
         const 前排真输出排名 = card_attrs.sort((a, b) => b.前排真输出 - a.前排真输出).map(({ id }) => id).indexOf(id) + 1;
@@ -241,7 +241,7 @@ class rating_constants {
             }
             for (const { border, rating, description } of rating_constants.rating_borders["后排耐久"]) {
                 if (a["后排耐久"] >= border) {
-                    local_ratings.push({ type, rate: rating });
+                    local_ratings.push({ type: "后排耐久", rate: rating });
                     break;
                 }
             }
@@ -387,7 +387,7 @@ get_data().then((card_attrs_new) => {
         <div style="white-space:pre-wrap;">${comments.get(id) ? comments.get(id).map((s) => s.length ? `<p>　　${s}</p>` : "<br>").join("") : ("寄").repeat(384)}</div>
         </div>
 
-        <p style="text-align:right;opacity:70%;color:#ef5fa8;padding-right:12px;font-size:70%;">
+        <p style="text-align:right;opacity:30%;color:#ef5fa8;padding-right:12px;font-size:70%;">
             数据支持: SIFAS综合数据.xlsx (by 潜水/CoffeePot)
             <br>评价提供者: ${comments.get(0).map((s) => s.replace(/(\s|\n)/, "")).filter((s) => s.length).join("、")}
             <br>${Intl.DateTimeFormat({}, { year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())}
